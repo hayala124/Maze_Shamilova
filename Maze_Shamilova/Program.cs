@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace maze_Shamilova
+namespace Maze_Shamilova
 {
     internal class Program
     {

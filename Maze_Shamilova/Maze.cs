@@ -1,28 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace maze_Shamilova
+namespace Maze_Shamilova
 {
     internal class Maze
     {
-        const int width = 50;
-        const int height = 20;
+        const int Width = 50;
+        const int Height = 20;
 
         /// <summary>
-        /// Генерирует лабиринт, устанавливает выход, создает проходы к нему
+        /// Генерирует лабиринт, устанавливает выход, создает проходы к нему.
         /// </summary>
         public char[,] GenerateMaze()
         {
-            char[,] maze = new char[height, width];
+            var maze = new char[Height, Width];
 
             Random random = new Random();
 
-            for (var i = 0; i < height; i++)
+            for (var i = 0; i < Height; i++)
             {
-                for (var j = 0; j < width; j++)
+                for (var j = 0; j < Width; j++)
                 {
                     maze[i, j] = '█';
                 }
@@ -30,27 +26,27 @@ namespace maze_Shamilova
 
             GenerateMazeRecursive(maze, 1, 1, random);
 
-            maze[height - 2, width - 2] = 'E';
+            maze[Height - 2, Width - 2] = 'E';
 
-            for (var i = 1; i < height - 2; i++)
+            for (var i = 1; i < Height - 2; i++)
             {
                 maze[i, 1] = ' ';
             }
 
-            for (var j = 1; j < width - 2; j++)
+            for (var j = 1; j < Width - 2; j++)
             {
                 if (random.NextDouble() > 0.7)
                 {
-                    maze[height - 2, j] = '█';
+                    maze[Height - 2, j] = '█';
                 }
                 else
                 {
-                    maze[height - 2, j] = ' ';
+                    maze[Height - 2, j] = ' ';
                 }
             }
 
-            if (width > 2 && maze[height - 2, width - 3] == '█')
-                maze[height - 2, width - 3] = ' ';
+            if (Width > 2 && maze[Height - 2, Width - 3] == '█')
+                maze[Height - 2, Width - 3] = ' ';
 
 
             return maze;
@@ -75,8 +71,8 @@ namespace maze_Shamilova
 
             foreach (var direction in directions)
             {
-                int newX = x + direction.Dx;
-                int newY = y + direction.Dy;
+                var newX = x + direction.Dx;
+                var newY = y + direction.Dy;
 
                 if (newX > 0 && newX < maze.GetLength(1) - 1 && newY > 0 && newY < maze.GetLength(0) - 1 && maze[newY, newX] == '█')
                 {
@@ -96,24 +92,27 @@ namespace maze_Shamilova
             while (n > 1)
             {
                 n--;
-                int k = rng.Next(n + 1);
+                var k = rng.Next(n + 1);
                 T value = array[k];
                 array[k] = array[n];
                 array[n] = value;
             }
         }
 
+        /// <summary>
+        /// Проверяет, существует ли решение пути из точки S к точке E в лабиринте.
+        /// </summary>
         public bool IsSolvable(char[,] maze)
         {
-            int height = maze.GetLength(0);
-            int width = maze.GetLength(1);
+            var height = maze.GetLength(0);
+            var width = maze.GetLength(1);
 
             Queue<(int x, int y)> queue = new Queue<(int x, int y)>();
-            bool[,] visited = new bool[height, width];
+            var visited = new bool[height, width];
 
-            for (int i = 0; i < height; i++)
+            for (var i = 0; i < height; i++)
             {
-                for (int j = 0; j < width; j++)
+                for (var j = 0; j < width; j++)
                 {
                     if (maze[i, j] == 'S')
                     {
@@ -125,7 +124,7 @@ namespace maze_Shamilova
                 if (queue.Count > 0) break;
             }
 
-            int[][] directions = { new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 1, 0 }, new int[] { -1, 0 } };
+            int[][] directions = { [0, 1], [0, -1], [1, 0], [-1, 0] };
 
             while (queue.Count > 0)
             {
@@ -135,8 +134,8 @@ namespace maze_Shamilova
 
                 foreach (var dir in directions)
                 {
-                    int newX = x + dir[0];
-                    int newY = y + dir[1];
+                    var newX = x + dir[0];
+                    var newY = y + dir[1];
 
                     if (newX >= 0 && newX < width && newY >= 0 && newY < height &&
                         maze[newY, newX] != '█' && !visited[newY, newX])
@@ -162,7 +161,7 @@ namespace maze_Shamilova
             {
                 DrawMaze(maze, playerX, playerY);
 
-                ConsoleKeyInfo key = Console.ReadKey(true);
+                var key = Console.ReadKey(true);
 
                 switch (key.Key)
                 {
@@ -186,7 +185,7 @@ namespace maze_Shamilova
 
                 if (maze[playerY, playerX] == 'E')
                 {
-                    Console.WriteLine("Поздравляем! Вы вышли из лабиринта!");
+                    Console.WriteLine("Поздравляем! Вы прошли лабиринт!");
                     break;
                 }
             }
@@ -197,7 +196,8 @@ namespace maze_Shamilova
         /// </summary>
         private void DrawMaze(char[,] maze, int playerX, int playerY)
         {
-            Console.Clear();
+            Console.SetCursorPosition(0, 0);
+
             maze[1, 1] = 'S';
 
             for (var y = 0; y < maze.GetLength(0); y++)
@@ -212,5 +212,6 @@ namespace maze_Shamilova
                 Console.WriteLine();
             }
         }
+
     }
 }
